@@ -1,0 +1,32 @@
+#!/bin/bash
+# Pre-commit hook: prevent commits with changes in mcp-searxng submodule
+# The submodule is read-only — changes should go to upstream repository
+
+SUBMODULE_DIR="vendor/mcp-searxng"
+
+# Skip if submodule doesn't exist yet (initial setup)
+if [ ! -d "$SUBMODULE_DIR/.git" ]; then
+    exit 0
+fi
+
+# Check if there are uncommitted changes INSIDE the submodule
+# (not just a submodule pointer change, which is OK)
+if git -C "$SUBMODULE_DIR" diff --quiet --exit-code 2>/dev/null && \
+   git -C "$SUBMODULE_DIR" diff --cached --quiet --exit-code 2>/dev/null; then
+    # No uncommitted changes inside submodule, allow commit
+    exit 0
+fi
+
+# Submodule has uncommitted changes — block commit
+echo "❌ ВНИМАНИЕ: Обнаружены незакоммиченные изменения в submodule $SUBMODULE_DIR"
+echo ""
+echo "Submodule vendor/mcp-searxng предназначен только для чтения."
+echo "Если вы хотите внести вклад в проект mcp-searxng:"
+echo "  1. Перейдите в vendor/mcp-searxng/"
+echo "  2. Сделайте fork: https://github.com/ihor-sokoliuk/mcp-searxng"
+echo "  3. Отправьте PR в upstream"
+echo ""
+echo "Для сброса изменений в submodule:"
+echo "  git submodule update --checkout -- vendor/mcp-searxng"
+echo ""
+exit 1

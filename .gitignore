@@ -1,0 +1,16 @@
+# Claude
+.claude/
+
+# OS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Submodules are tracked separately
+# mcp-searxng/ - managed as git submodule

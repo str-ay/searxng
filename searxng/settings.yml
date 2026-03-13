@@ -1,0 +1,170 @@
+use_default_settings:
+  engines:
+    remove:
+      - startpage   # часто таймауты, не нужен
+      - ahmia       # не загружается
+      - torch       # не загружается
+    keep:
+      # Поисковики
+      - google
+      - brave
+      
+      # АКАДЕМИЧЕСКИЕ (приоритет 1)
+      - semantic scholar
+      - arxiv
+      - crossref
+      - openlibrary
+      
+      # АРХИТЕКТУРНЫЕ СООБЩЕСТВА (приоритет 2)
+      - hackernews
+      - reddit
+      
+      # КОД И РЕАЛИЗАЦИИ
+      - github
+      - gitlab
+      - stackexchange
+      
+      # ПАКЕТЫ И ИНСТРУМЕНТЫ
+      - docker hub
+      - npm
+      - pypi
+      - crates
+      - repology
+
+search:
+  formats:
+    - html
+    - json
+    
+server:
+  limiter: false
+  public_instance: false
+  secret_key: "{{ env \"SEARXNG_SECRET_KEY\" }}"  # Set via docker-compose or environment
+  reverse_proxy: true  # MCP сервер acts as reverse proxy
+  method: 'GET'  # Allow GET only
+  user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:148.0) Gecko/20100101 Firefox/148.0'
+
+engines:
+  # Поисковики
+  - name: google
+    engine: google
+    timeout: 4.0
+    disabled: false
+    shortcut: g
+    weight: 1.0
+
+  - name: brave
+    engine: brave
+    timeout: 4.0
+    disabled: false
+    shortcut: br
+    weight: 1.2
+
+  - name: duckduckgo
+    engine: duckduckgo
+    timeout: 3.0
+    disabled: true  # Заблокирован CAPTCHA для Russian locale
+    shortcut: ddg
+    weight: 1.1
+
+  # АКАДЕМИЧЕСКИЕ (МАКСИМАЛЬНЫЙ ПРИОРИТЕТ)
+  - name: semantic scholar
+    engine: semantic_scholar
+    timeout: 6.0
+    disabled: false
+    shortcut: ss
+    weight: 5.0  # Максимальный вес для архитектурных исследований
+
+  - name: arxiv
+    engine: arxiv
+    timeout: 6.0
+    disabled: false
+    shortcut: ax
+    weight: 4.5  # Свежие препринты по архитектуре
+
+  - name: crossref
+    engine: crossref
+    timeout: 5.0
+    disabled: false
+    shortcut: cr
+    weight: 4.0  # Проверенные публикации
+
+  - name: openlibrary
+    engine: openlibrary
+    timeout: 10.0
+    disabled: false
+    shortcut: ol
+    weight: 3.0  # Книги по архитектуре
+
+  # АРХИТЕКТУРНЫЕ СООБЩЕСТВА
+  - name: hackernews
+    engine: hackernews
+    timeout: 10.0
+    disabled: false
+    shortcut: hn
+    weight: 4.5  # Обсуждения архитектур от практиков
+
+  - name: reddit
+    engine: reddit
+    timeout: 10.0
+    disabled: false
+    shortcut: re
+    weight: 3.5  # Реальный опыт, кейсы
+
+  # РЕАЛИЗАЦИИ И ПРИМЕРЫ
+  - name: github
+    engine: github
+    timeout: 5.0
+    disabled: false
+    shortcut: gh
+    weight: 3.0  # Примеры кода архитектур
+
+  - name: gitlab
+    engine: gitlab
+    timeout: 5.0
+    disabled: false
+    shortcut: gl
+    weight: 2.5
+
+  - name: stackexchange
+    engine: stackexchange
+    timeout: 10.0
+    disabled: false
+    shortcut: so
+    weight: 2.5  # Включая SoftwareEngineering
+
+  # ИНСТРУМЕНТЫ
+  - name: docker hub
+    engine: docker_hub
+    timeout: 10.0
+    disabled: false
+    shortcut: dh
+    weight: 2.0
+
+  - name: npm
+    engine: npm
+    timeout: 3.0
+    disabled: false
+    shortcut: np
+    weight: 2.0
+
+  - name: pypi
+    engine: pypi
+    timeout: 3.0
+    disabled: false
+    shortcut: py
+    weight: 2.0
+
+  - name: crates
+    engine: crates
+    timeout: 3.0
+    disabled: false
+    shortcut: rs
+    weight: 1.5
+
+  - name: repology
+    engine: repology
+    timeout: 5.0
+    disabled: false
+    shortcut: rp
+    weight: 1.5
