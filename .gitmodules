@@ -1,0 +1,4 @@
+[submodule "vendor/mcp-searxng"]
+	path = vendor/mcp-searxng
+	url = https://github.com/ihor-sokoliuk/mcp-searxng.git
+	update = none
