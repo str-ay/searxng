@@ -1,11 +1,13 @@
 use_default_settings:
   engines:
-    remove: []
+    remove:
+      - startpage   # часто таймауты, не нужен
+      - ahmia       # не загружается
+      - torch       # не загружается
     keep:
       # Поисковики
       - google
       - brave
-      - duckduckgo
       
       # АКАДЕМИЧЕСКИЕ (приоритет 1)
       - semantic scholar
@@ -38,6 +40,9 @@ server:
   limiter: false
   public_instance: false
   secret_key: "{{ env \"SEARXNG_SECRET_KEY\" }}"  # Set via docker-compose or environment
+  reverse_proxy: true  # MCP сервер acts as reverse proxy
+  method: 'GET'  # Allow GET only
+  user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:148.0) Gecko/20100101 Firefox/148.0'
 
 engines:
   # Поисковики
@@ -58,7 +63,7 @@ engines:
   - name: duckduckgo
     engine: duckduckgo
     timeout: 3.0
-    disabled: false
+    disabled: true  # Заблокирован CAPTCHA для Russian locale
     shortcut: ddg
     weight: 1.1
 
@@ -86,7 +91,7 @@ engines:
 
   - name: openlibrary
     engine: openlibrary
-    timeout: 4.0
+    timeout: 10.0
     disabled: false
     shortcut: ol
     weight: 3.0  # Книги по архитектуре
@@ -94,14 +99,14 @@ engines:
   # АРХИТЕКТУРНЫЕ СООБЩЕСТВА
   - name: hackernews
     engine: hackernews
-    timeout: 3.0
+    timeout: 10.0
     disabled: false
     shortcut: hn
     weight: 4.5  # Обсуждения архитектур от практиков
 
   - name: reddit
     engine: reddit
-    timeout: 4.0
+    timeout: 10.0
     disabled: false
     shortcut: re
     weight: 3.5  # Реальный опыт, кейсы
@@ -123,7 +128,7 @@ engines:
 
   - name: stackexchange
     engine: stackexchange
-    timeout: 3.0
+    timeout: 10.0
     disabled: false
     shortcut: so
     weight: 2.5  # Включая SoftwareEngineering
@@ -131,7 +136,7 @@ engines:
   # ИНСТРУМЕНТЫ
   - name: docker hub
     engine: docker_hub
-    timeout: 4.0
+    timeout: 10.0
     disabled: false
     shortcut: dh
     weight: 2.0
