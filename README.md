@@ -13,6 +13,13 @@
 
 ## Установка
 
+**Ручная установка:**
+
+1. Установить podman
+```bash
+brew install podman podman-compose
+```
+
 1. Клонировать репозиторий с submodule:
 ```bash
 git clone --recurse-submodules git@gitverse.ru:stray/searxng.git
@@ -21,18 +28,11 @@ git clone --recurse-submodules git@gitverse.ru:stray/searxng.git
 Если уже склонировано без submodule:
 ```bash
 git submodule update --init --recursive
-# если submodule не подтянулся (пустая папка), клонируйте напрямую:
-rm -rf vendor/mcp-searxng && git clone --depth 1 https://github.com/ihor-sokoliuk/mcp-searxng.git vendor/mcp-searxng
 ```
 
-2. Настроить git hooks (защита от изменений в submodule):
+3. Настроить git hooks:
 ```bash
 git config core.hooksPath .githooks
-```
-
-3. (Опционально) Установить секретный ключ для SearXNG:
-```bash
-export SEARXNG_SECRET_KEY="$(openssl rand -hex 32)"
 ```
 
 4. Запустить сервисы:
@@ -40,17 +40,13 @@ export SEARXNG_SECRET_KEY="$(openssl rand -hex 32)"
 podman-compose up -d --build
 ```
 
-5. Настроить Claude (`.claude.json`):
-
-**Для HTTP transport:**
+5. Добавить в глобальный `~/.claude.json`:
 ```json
 {
   "mcpServers": {
     "searxng-search": {
-      "transport": {
-        "type": "http",
-        "url": "http://localhost:13000/mcp"
-      }
+      "type": "http",
+      "url": "http://localhost:13000/mcp"
     }
   }
 }
